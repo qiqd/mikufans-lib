@@ -1,5 +1,6 @@
 package org.mikufans.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,31 +16,37 @@ public class Comic extends BaseWork {
   /**
    * 总章节数
    */
+  @Schema(description = "总章节数", example = "205")
   private Integer chapterCount;
 
   /**
    * 总卷数
    */
+  @Schema(description = "总卷数", example = "23")
   private Integer volumeCount;
 
   /**
    * 作者
    */
+  @Schema(description = "作者", example = "吾峠呼世晴")
   private String author;
 
   /**
    * 画师（若与作者不同）
    */
+  @Schema(description = "作画", example = "大久保笃")
   private String artist;
 
   /**
    * 出版社
    */
+  @Schema(description = "出版社", example = "集英社")
   private String publisher;
 
   /**
    * 连载杂志（如周刊少年Jump）
    */
+  @Schema(description = "连载杂志", example = "周刊少年JUMP")
   private String serializationMagazine;
 
   /**

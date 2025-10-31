@@ -2,7 +2,6 @@ package org.mikufans.service;
 
 import org.mikufans.entity.Animation;
 import org.mikufans.entity.MyPage;
-import org.mikufans.entity.Tag;
 
 import java.util.List;
 
@@ -29,7 +28,7 @@ public interface AnimationService {
    *
    * @param animations 动画对象
    */
-  void saveBatchAnimations(List<Animation> animations, List<Tag> tags);
+  void saveBatchAnimations(List<Animation> animations);
 
   /**
    * 更新动画
@@ -46,4 +45,28 @@ public interface AnimationService {
    * @return
    */
   boolean deleteAnimation(Long id);
+
+  /**
+   * 根据动画制作公司查询动画
+   * 
+   * @param studio 动画制作公司
+   * @return 动画列表
+   */
+  List<Animation> getAnimationsByStudio(String studio);
+
+  /**
+   * 根据导演查询动画
+   * 
+   * @param director 导演
+   * @return 动画列表
+   */
+  List<Animation> getAnimationsByDirector(String director);
+
+  /**
+   * 根据播放平台查询动画
+   * 
+   * @param platform 播放平台
+   * @return 动画列表
+   */
+  List<Animation> getAnimationsByBroadcastPlatform(String platform);
 }

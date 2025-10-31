@@ -2,6 +2,7 @@ package org.mikufans.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -12,17 +13,20 @@ import java.util.Map;
  * ACG人物统一表实体类
  * 包含剧中角色与现实人物（声优、作者等）
  */
+@Schema(description = "ACG角色信息")
 @Data
-public class ACGCharacter {
+public class Character {
   /**
    * 主键，自增ID
    */
+  @Schema(description = "角色ID", example = "1")
   @TableId(type = IdType.AUTO)
   private Long id;
 
   /**
    * 角色或人物名称
    */
+  @Schema(description = "角色名称", example = "炭治郎")
   private String name;
 
   /**
@@ -33,16 +37,19 @@ public class ACGCharacter {
   /**
    * 头像或照片URL
    */
+  @Schema(description = "角色图片URL", example = "https://example.com/char.png")
   private String imageUrl;
 
   /**
    * 简介
    */
+  @Schema(description = "角色简介", example = "鬼杀队剑士，为了让妹妹祢豆子变回人类而踏上旅程")
   private String description;
 
   /**
    * 性别（M/F/Other/Unknown）
    */
+  @Schema(description = "角色性别", example = "M")
   private String gender;
 
   /**
@@ -58,11 +65,13 @@ public class ACGCharacter {
   /**
    * 设定年龄
    */
+  @Schema(description = "角色年龄", example = "15")
   private Integer fictionalAge;
 
   /**
    * 设定生日（MM-DD格式）
    */
+  @Schema(description = "角色生日", example = "12-27")
   private String fictionalBirthday;
 
   /**
@@ -98,6 +107,7 @@ public class ACGCharacter {
   /**
    * 声优ID（仅对剧中人有效，指向另一个 acg_character）
    */
+  @Schema(description = "配音演员ID", example = "1")
   private Long voiceActorId;
 
   /**

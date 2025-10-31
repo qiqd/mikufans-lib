@@ -27,7 +27,7 @@ public class SwaggerConfig {
     return new OpenAPI()
             .info(new Info()
                     .title("MikufansBack API 文档")
-                    .description("动漫、漫画、小说管理系统的API接口文档")
+                    .description("动漫、漫画、小说元数据管理系统的API接口文档")
                     .version("1.0.0")
                     .contact(new Contact()
                             .name("Qiqd")
