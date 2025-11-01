@@ -1,56 +1,78 @@
-CREATE TABLE animation (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键，自增ID',
+create table animation
+(
+    id                     bigint auto_increment comment '主键，自增ID'
+        primary key,
+    title                  varchar(255)                          not null comment '作品名称（中文名）',
+    original_title         varchar(255)                          null comment '原名（如日文名）',
+    english_title          varchar(255)                          null comment '英文名称',
+    description            text                                  null comment '作品简介',
+    release_date           date                                  null comment '发布日期（首播日期）',
+    country                varchar(100)                          null comment '制作国家/地区',
+    language               varchar(50)                           null comment '原始语言',
+    status                 varchar(20) default 'ONGOING'         null comment '状态：ONGOING, COMPLETED, CANCELLED, HIATUS',
+    cover_image_url        varchar(500)                          null comment '封面图URL',
+    official_website       varchar(500)                          null comment '官方网站链接',
+    average_rating         decimal(3, 2)                         null comment '平均评分（0.00~10.00）',
+    total_views            bigint      default 0                 null comment '总观看/点击次数',
+    studio_or_author       varchar(255)                          null comment '制作公司或原作者（通用字段）',
+    age_rating_system      varchar(50)                           null comment '评级系统（如 CERO、ESRB、MPAA）',
+    age_rating_code        varchar(10)                           null comment '评级代码（如 A/B/C 或 E/T/M）',
+    age_rating_min_age     int                                   null comment '建议最小年龄（如 3, 6, 12, 16, 18）',
+    age_rating_description text                                  null comment '评级说明（包含暴力、语言、性暗示等内容）',
+    episode_count          int                                   null comment '总集数',
+    duration_per_episode   int                                   null comment '单集时长（分钟）',
+    broadcast_platform     varchar(100)                          null comment '播放平台（如 Bilibili、Crunchyroll）',
+    start_date             date                                  null comment '开播日期',
+    end_date               date                                  null comment '完结日期',
+    director               varchar(255)                          null comment '导演',
+    script_writer          varchar(255)                          null comment '编剧',
+    music_composer         varchar(255)                          null comment '音乐制作',
+    animation_studio       varchar(255)                          null comment '动画制作公司',
+    main_voice_actors      json                                  null comment '主要声优列表，存储为 JSON 字符串，格式：["花泽香菜", "小野贤章"]',
+    source_material        varchar(255)                          null comment '改编来源（如“漫画改编”、“轻小说改编”）',
+    created_at             datetime    default CURRENT_TIMESTAMP null comment '创建时间',
+    updated_at             datetime    default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '最后更新时间'
+)
+    comment '动画作品表，包含所有动画的完整信息';
 
-    -- 基本信息
-    title VARCHAR(255) NOT NULL COMMENT '作品名称（中文名）',
-    original_title VARCHAR(255) COMMENT '原名（如日文名）',
-    english_title VARCHAR(255) COMMENT '英文名称',
-    description TEXT COMMENT '作品简介',
-    release_date DATE COMMENT '发布日期（首播日期）',
-    country VARCHAR(100) COMMENT '制作国家/地区',
-    language VARCHAR(50) COMMENT '原始语言',
-    status VARCHAR(20) DEFAULT 'ONGOING' COMMENT '状态：ONGOING, COMPLETED, CANCELLED, HIATUS',
-    cover_image_url VARCHAR(500) COMMENT '封面图URL',
-    official_website VARCHAR(500) COMMENT '官方网站链接',
+create index idx_average_rating
+    on animation (average_rating);
 
-    -- 评分与热度
-    average_rating DECIMAL(3,2) COMMENT '平均评分（0.00~10.00）',
-    total_views BIGINT DEFAULT 0 COMMENT '总观看/点击次数',
+create index idx_director
+    on animation (director);
 
-    -- 创作者
-    studio_or_author VARCHAR(255) COMMENT '制作公司或原作者（通用字段）',
+create index idx_release_date
+    on animation (release_date);
 
-    -- 年龄评级
-    age_rating_system VARCHAR(50) COMMENT '评级系统（如 CERO、ESRB、MPAA）',
-    age_rating_code VARCHAR(10) COMMENT '评级代码（如 A/B/C 或 E/T/M）',
-    age_rating_min_age INT COMMENT '建议最小年龄（如 3, 6, 12, 16, 18）',
-    age_rating_description TEXT COMMENT '评级说明（包含暴力、语言、性暗示等内容）',
+create index idx_status
+    on animation (status);
 
-    -- 动画特有字段
-    episode_count INT COMMENT '总集数',
-    duration_per_episode INT COMMENT '单集时长（分钟）',
-    broadcast_platform VARCHAR(100) COMMENT '播放平台（如 Bilibili、Crunchyroll）',
-    start_date DATE COMMENT '开播日期',
-    end_date DATE COMMENT '完结日期',
-    director VARCHAR(255) COMMENT '导演',
-    script_writer VARCHAR(255) COMMENT '编剧',
-    music_composer VARCHAR(255) COMMENT '音乐制作',
-    animation_studio VARCHAR(255) COMMENT '动画制作公司',
-    main_voice_actors TEXT COMMENT '主要声优列表，存储为 JSON 字符串，格式：["花泽香菜", "小野贤章"]',
-    source_material VARCHAR(255) COMMENT '改编来源（如“漫画改编”、“轻小说改编”）',
+create index idx_studio
+    on animation (animation_studio);
 
-    -- 时间戳
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
+create index idx_title
+    on animation (title);
 
-    INDEX idx_title (title),
-    INDEX idx_release_date (release_date),
-    INDEX idx_status (status),
-    INDEX idx_average_rating (average_rating),
-    INDEX idx_director (director),
-    INDEX idx_studio (animation_studio)
 
-) COMMENT='动画作品表，包含所有动画的完整信息';
+create index idx_average_rating
+    on animation (average_rating);
+
+create index idx_director
+    on animation (director);
+
+create index idx_release_date
+    on animation (release_date);
+
+create index idx_status
+    on animation (status);
+
+create index idx_studio
+    on animation (animation_studio);
+
+create index idx_title
+    on animation (title);
+
+
 
 CREATE TABLE comic (
     id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键，自增ID',

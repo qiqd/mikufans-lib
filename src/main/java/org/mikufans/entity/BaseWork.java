@@ -14,18 +14,18 @@ import java.util.Date;
  */
 @Schema(description = "作品基类，封装ACG作品的公共属性")
 @Data
-public abstract class BaseWork {
+public class BaseWork {
   /**
    * 主键，自增ID
    */
-  @Schema(description = "主键ID", required = true, example = "1")
+  @Schema(description = "主键ID", example = "1")
   @TableId(type = IdType.AUTO)
   private Long id;
 
   /**
    * 作品名称（中文名）
    */
-  @Schema(description = "作品名称（中文名）", required = true, example = "鬼灭之刃")
+  @Schema(description = "作品名称（中文名）", example = "鬼灭之刃")
   private String title;
 
   /**
@@ -121,19 +121,29 @@ public abstract class BaseWork {
   /**
    * 评级说明
    */
+  @Schema(description = "评级说明", example = "对12岁以上用户推荐")
   private String ageRatingDescription;
 
   /**
    * 创建时间
    */
+  @Schema(description = "创建时间", example = "2023-01-01T12:00:00")
   private LocalDateTime createdAt;
 
   /**
    * 最后更新时间
    */
+  @Schema(description = "最后更新时间", example = "2023-01-01T12:00:00")
   private LocalDateTime updatedAt;
   /**
    * 分类
    */
+  @Schema(description = "分类", example = "爱情")
   private String genre;
+
+  /**
+   * 单集更新时间，比如“每周三/20：00”
+   */
+  @Schema(description = "单集更新时间", example = "每周三20：00")
+  private String singleUpdateTime;
 }

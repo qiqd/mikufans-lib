@@ -11,3 +11,7 @@ spring:
     password: 12345
 server:
   port: 8080
+logging:
+  level:
+    root: info
+    org.mikufans: debug

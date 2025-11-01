@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -37,13 +37,13 @@ public class Animation extends BaseWork {
    * 开播日期
    */
   @Schema(description = "开播日期", example = "2019-04-06")
-  private Date startDate;
+  private LocalDate startDate;
 
   /**
    * 完结日期
    */
   @Schema(description = "完结日期", example = "2019-09-28")
-  private Date endDate;
+  private LocalDate endDate;
 
   /**
    * 导演
