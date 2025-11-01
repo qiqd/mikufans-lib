@@ -15,4 +15,12 @@ public interface AnimationRepository extends MongoRepository<Animation, String> 
   List<Animation> findAnimationByBroadcastPlatform(String broadcastPlatform);
 
   List<Animation> findAnimationByTitleContaining(String name);
+
+  List<Animation> findAnimationByOriginalTitle(String name);
+
+  List<Animation> findAnimationByEnglishTitle(String name);
+
+  List<Animation> findAnimationByOriginalTitleContaining(String name);
+
+  List<Animation> findAnimationByEnglishTitleContaining(String name);
 }

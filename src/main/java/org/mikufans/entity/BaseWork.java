@@ -1,6 +1,5 @@
 package org.mikufans.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -131,15 +130,13 @@ public class BaseWork {
   /**
    * 创建时间
    */
-  @Schema(description = "创建时间", example = "2023-01-01T12:00:00")
-  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+  @Schema(description = "这条数据的创建时间", example = "2023-01-01T12:00:00")
   private LocalDateTime createdAt;
 
   /**
    * 最后更新时间
    */
-  @Schema(description = "最后更新时间", example = "2023-01-01T12:00:00")
-  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+  @Schema(description = "这条数据的最后更新时间", example = "2023-01-01T12:00:00")
   private LocalDateTime updatedAt;
   /**
    * 分类

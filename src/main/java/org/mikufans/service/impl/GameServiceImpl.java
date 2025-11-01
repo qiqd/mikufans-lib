@@ -55,6 +55,13 @@ public class GameServiceImpl implements GameService {
 
   @Override
   public List<Game> getGameByTitle(String name) {
-    return gameRepository.findByTitleContaining(name);
+    List<Game> result = gameRepository.findByTitleContaining(name);
+    if (result.isEmpty()) {
+      result = gameRepository.findByOriginalTitleContaining(name);
+    }
+    if (result.isEmpty()) {
+      result = gameRepository.findByEnglishTitleContaining(name);
+    }
+    return result;
   }
 }

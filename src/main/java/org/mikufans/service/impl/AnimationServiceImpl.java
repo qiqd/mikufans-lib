@@ -66,6 +66,18 @@ public class AnimationServiceImpl implements AnimationService {
 
   @Override
   public List<Animation> getAnimationsByTitle(String name) {
-    return animationRepository.findAnimationByTitleContaining(name);
+    // 首先尝试在中文标题中搜索
+    List<Animation> results = animationRepository.findAnimationByTitleContaining(name);
+
+    // 如果中文标题没有结果，尝试搜索原名
+    if (results.isEmpty()) {
+      results = animationRepository.findAnimationByOriginalTitleContaining(name);
+    }
+
+    // 如果原名也没有结果，尝试搜索英文标题
+    if (results.isEmpty()) {
+      results = animationRepository.findAnimationByEnglishTitleContaining(name);
+    }
+    return results;
   }
 }

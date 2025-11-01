@@ -55,6 +55,13 @@ public class ComicServiceImpl implements ComicService {
 
   @Override
   public List<Comic> getComicByTitle(String name) {
-    return comicRepository.findByTitleContaining(name);
+    List<Comic> result = comicRepository.findByTitleContaining(name);
+    if (result.isEmpty()) {
+      result = comicRepository.findByOriginalTitleContaining(name);
+    }
+    if (result.isEmpty()) {
+      result = comicRepository.findByEnglishTitleContaining(name);
+    }
+    return result;
   }
 }

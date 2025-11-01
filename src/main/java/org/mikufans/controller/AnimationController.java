@@ -151,4 +151,18 @@ public class AnimationController {
     List<Animation> animations = animationService.getAnimationsByBroadcastPlatform(platform);
     return ResponseEntity.ok(animations);
   }
+
+  /**
+   * 根据名称查询动画
+   *
+   * @param name 动画名称
+   * @return 动画列表
+   */
+  @Operation(summary = "根据名称查询", description = "查询指定名称的所有动画")
+  @GetMapping("/by-name/{name}")
+  public ResponseEntity<List<Animation>> getAnimationsByName(
+          @Parameter(description = "动画名称") @PathVariable String name) {
+    List<Animation> animations = animationService.getAnimationsByTitle(name);
+    return ResponseEntity.ok(animations);
+  }
 }

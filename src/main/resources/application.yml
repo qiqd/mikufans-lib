@@ -6,9 +6,17 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost/test
+      auto-index-creation: true
 logging:
   level:
     root: info
     org.mikufans: debug
+    org.springframework.data.mongodb: debug
+  file:
+    path: /log/mikufans-lib
+    name: mikufans-lib.log
+  logback:
+    rolling policy:
+      max-file-size: 5MB
 server:
   port: 45279
