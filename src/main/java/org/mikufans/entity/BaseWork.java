@@ -1,9 +1,10 @@
 package org.mikufans.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -12,31 +13,34 @@ import java.util.Date;
  * 作品基类
  * 封装动画、漫画、游戏等ACG作品的公共属性
  */
-@Schema(description = "作品基类，封装ACG作品的公共属性")
 @Data
+@Schema(description = "作品基类，封装ACG作品的公共属性")
 public class BaseWork {
   /**
    * 主键，自增ID
    */
   @Schema(description = "主键ID", example = "1")
-  @TableId(type = IdType.AUTO)
-  private Long id;
+  @Id
+  private String id;
 
   /**
    * 作品名称（中文名）
    */
+  @Indexed(background = true)
   @Schema(description = "作品名称（中文名）", example = "鬼灭之刃")
   private String title;
 
   /**
    * 原名（如日文名）
    */
+  @Indexed(background = true)
   @Schema(description = "原名（如日文名）", example = "鬼滅の刃")
   private String originalTitle;
 
   /**
    * 英文名称
    */
+  @Indexed(background = true)
   @Schema(description = "英文名称", example = "Demon Slayer")
   private String englishTitle;
 
@@ -128,16 +132,19 @@ public class BaseWork {
    * 创建时间
    */
   @Schema(description = "创建时间", example = "2023-01-01T12:00:00")
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private LocalDateTime createdAt;
 
   /**
    * 最后更新时间
    */
   @Schema(description = "最后更新时间", example = "2023-01-01T12:00:00")
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private LocalDateTime updatedAt;
   /**
    * 分类
    */
+  @Indexed(background = true)
   @Schema(description = "分类", example = "爱情")
   private String genre;
 

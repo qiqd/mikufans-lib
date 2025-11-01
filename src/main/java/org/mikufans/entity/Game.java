@@ -3,6 +3,8 @@ package org.mikufans.entity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
@@ -10,13 +12,15 @@ import java.util.List;
  * 游戏作品表实体类
  * 包含所有游戏的完整信息
  */
-@Schema(description = "游戏作品信息")
 @Data
+@Schema(description = "游戏作品信息")
+@Document(collection = "games")
 @EqualsAndHashCode(callSuper = true)
 public class Game extends BaseWork {
   /**
    * 开发公司
    */
+  @Indexed(background = true)
   @Schema(description = "开发公司", example = "FromSoftware")
   private String developer;
 

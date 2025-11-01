@@ -1,13 +1,14 @@
 package org.mikufans.service.impl;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.mikufans.entity.Game;
 import org.mikufans.entity.MyPage;
-import org.mikufans.mapper.GameMapper;
+import org.mikufans.repository.GameRepository;
 import org.mikufans.service.GameService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,34 +18,43 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
-public class GameServiceImpl extends ServiceImpl<GameMapper, Game> implements GameService {
+public class GameServiceImpl implements GameService {
 
-  private final GameMapper gameMapper;
+  private final GameRepository gameRepository;
 
   @Override
   public MyPage<Game> getAllGames(Integer page, Integer size) {
-    Page<Game> pageResult = gameMapper.selectPage(new Page<>(page, size), null);
-    return new MyPage<>(page, size.longValue(), pageResult.getPages(), pageResult.getTotal(), pageResult.getRecords());
+    Pageable pageable = PageRequest.of(page - 1, size);
+    org.springframework.data.domain.Page<Game> pageResult = gameRepository.findAll(pageable);
+    List<Game> records = pageResult.getContent();
+    return new MyPage<>(page, size.longValue(), (long) pageResult.getTotalPages(), pageResult.getTotalElements(), records);
   }
 
   @Override
-  public Game getGameById(Long id) {
-    return gameMapper.selectById(id);
+  public Game getGameById(String id) {
+    return gameRepository.findById(id).orElse(null);
   }
 
   @Override
+  @Transactional(rollbackFor = Exception.class)
   public void saveBatchGames(List<Game> games) {
     games.forEach(game -> game.setId(null));
-    gameMapper.insert(games);
+    gameRepository.saveAll(games);
   }
 
   @Override
   public void updateGame(Game game) {
-    gameMapper.updateById(game);
+    gameRepository.save(game);
   }
 
   @Override
-  public boolean deleteGame(Long id) {
-    return gameMapper.deleteById(id) > 0;
+  public boolean deleteGame(String id) {
+    gameRepository.deleteById(id);
+    return true;
+  }
+
+  @Override
+  public List<Game> getGameByTitle(String name) {
+    return gameRepository.findByTitleContaining(name);
   }
 }

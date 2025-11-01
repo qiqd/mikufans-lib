@@ -21,7 +21,7 @@ public interface AnimationService {
    * @param id 动画ID
    * @return 动画详情
    */
-  Animation getAnimationById(Long id);
+  Animation getAnimationById(String id);
 
   /**
    * 添加动画
@@ -34,7 +34,7 @@ public interface AnimationService {
    * 更新动画
    *
    * @param animation 动画对象
-   * @return
+   * @return 是否更新成功
    */
   boolean updateAnimation(Animation animation);
 
@@ -42,13 +42,13 @@ public interface AnimationService {
    * 删除动画
    *
    * @param id 动画ID
-   * @return
+   * @return 是否删除成功
    */
-  boolean deleteAnimation(Long id);
+  boolean deleteAnimation(String id);
 
   /**
    * 根据动画制作公司查询动画
-   * 
+   *
    * @param studio 动画制作公司
    * @return 动画列表
    */
@@ -56,7 +56,7 @@ public interface AnimationService {
 
   /**
    * 根据导演查询动画
-   * 
+   *
    * @param director 导演
    * @return 动画列表
    */
@@ -64,9 +64,17 @@ public interface AnimationService {
 
   /**
    * 根据播放平台查询动画
-   * 
+   *
    * @param platform 播放平台
    * @return 动画列表
    */
   List<Animation> getAnimationsByBroadcastPlatform(String platform);
+
+  /**
+   * 根据名称查询动画
+   *
+   * @param name 动画名称
+   * @return 动画列表
+   */
+  List<Animation> getAnimationsByTitle(String name);
 }

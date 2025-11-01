@@ -49,7 +49,7 @@ public class CharacterController {
   @Operation(summary = "获取角色详情", description = "根据角色ID获取详细信息")
   @GetMapping("/{id}")
   public ResponseEntity<Character> getCharacterById(
-          @Parameter(description = "角色ID") @PathVariable Long id) {
+          @Parameter(description = "角色ID") @PathVariable String id) {
     Character character = characterService.getCharacterById(id);
     if (character == null) {
       return ResponseEntity.notFound().build();
@@ -83,7 +83,7 @@ public class CharacterController {
   @Operation(summary = "更新角色", description = "根据角色ID更新角色信息")
   @PutMapping("/{id}")
   public ResponseEntity<Character> updateCharacter(
-          @Parameter(description = "角色ID") @PathVariable Long id,
+          @Parameter(description = "角色ID") @PathVariable String id,
           @Parameter(description = "角色信息") @RequestBody Character character) {
     // 检查人物是否存在
     if (characterService.getCharacterById(id) == null) {
@@ -108,7 +108,7 @@ public class CharacterController {
   @Operation(summary = "删除角色", description = "根据角色ID删除角色")
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteCharacter(
-          @Parameter(description = "角色ID") @PathVariable Long id) {
+          @Parameter(description = "角色ID") @PathVariable String id) {
     // 检查人物是否存在
     if (characterService.getCharacterById(id) == null) {
       return ResponseEntity.notFound().build();

@@ -1,6 +1,5 @@
 package org.mikufans.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
 import org.mikufans.entity.Character;
 import org.mikufans.entity.MyPage;
 
@@ -10,7 +9,7 @@ import java.util.List;
  * ACGCharacter服务层接口
  * 定义人物相关的业务操作
  */
-public interface CharacterService extends IService<Character> {
+public interface CharacterService {
 
   /**
    * 获取所有人物列表（分页）
@@ -27,7 +26,7 @@ public interface CharacterService extends IService<Character> {
    * @param id 人物ID
    * @return 人物对象
    */
-  Character getCharacterById(Long id);
+  Character getCharacterById(String id);
 
   /**
    * 新增人物
@@ -53,7 +52,7 @@ public interface CharacterService extends IService<Character> {
    * @param id 人物ID
    * @return 是否删除成功
    */
-  boolean deleteCharacter(Long id);
+  boolean deleteCharacter(String id);
 
   /**
    * 根据类型获取人物列表

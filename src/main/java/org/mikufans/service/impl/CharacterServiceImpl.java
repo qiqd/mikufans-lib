@@ -1,14 +1,14 @@
 package org.mikufans.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.mikufans.entity.Character;
 import org.mikufans.entity.MyPage;
-import org.mikufans.mapper.CharacterMapper;
+import org.mikufans.repository.CharacterRepository;
 import org.mikufans.service.CharacterService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,54 +18,56 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
-public class CharacterServiceImpl extends ServiceImpl<CharacterMapper, Character> implements CharacterService {
-  private final CharacterMapper characterMapper;
+public class CharacterServiceImpl implements CharacterService {
+  private final CharacterRepository characterRepository;
 
   @Override
   public MyPage<Character> getAllCharacters(Integer page, Integer size) {
-    Page<Character> acgCharacterPage = new Page<>(page, size);
-    Page<Character> pageResult = query().page(acgCharacterPage);
-    return new MyPage<>(page, size.longValue(), pageResult.getPages(), pageResult.getTotal(), pageResult.getRecords());
+    Pageable pageable = PageRequest.of(page - 1, size);
+    org.springframework.data.domain.Page<Character> characterPage = characterRepository.findAll(pageable);
+    List<Character> records = characterPage.getContent();
+    return new MyPage<>(page, size.longValue(), (long) characterPage.getTotalPages(), characterPage.getTotalElements(), records);
   }
 
   @Override
-  public Character getCharacterById(Long id) {
-    return characterMapper.selectById(id);
+  public Character getCharacterById(String id) {
+    return characterRepository.findById(id).orElse(null);
   }
 
   @Override
+  @Transactional(rollbackFor = Exception.class)
   public boolean saveCharacter(Character character) {
     character.setId(null);
-    return save(character);
+    characterRepository.save(character);
+    return true;
   }
 
   @Override
+  @Transactional(rollbackFor = Exception.class)
   public void saveBatchCharacters(List<Character> characters) {
     characters.forEach(character -> character.setId(null));
-    characterMapper.insert(characters);
+    characterRepository.saveAll(characters);
   }
 
   @Override
   public boolean updateCharacter(Character character) {
-    return updateById(character);
+    characterRepository.save(character);
+    return true;
   }
 
   @Override
-  public boolean deleteCharacter(Long id) {
-    return removeById(id);
+  public boolean deleteCharacter(String id) {
+    characterRepository.deleteById(id);
+    return true;
   }
 
   @Override
   public List<Character> getCharactersByType(String type) {
-    QueryWrapper<Character> wrapper = new QueryWrapper<>();
-    wrapper.eq("type", type);
-    return characterMapper.selectList(wrapper);
+    return characterRepository.findByType(type);
   }
 
   @Override
   public List<Character> searchCharactersByName(String name) {
-    QueryWrapper<Character> wrapper = new QueryWrapper<>();
-    wrapper.like("name", name);
-    return characterMapper.selectList(wrapper);
+    return characterRepository.findByNameContaining(name);
   }
 }

@@ -9,6 +9,8 @@ import org.mikufans.service.TagService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * Tag控制器类
  * 处理标签相关的HTTP请求
@@ -45,7 +47,7 @@ public class TagController {
    */
   @Operation(summary = "获取标签详情", description = "根据ID获取标签详细信息")
   @GetMapping("/{id}")
-  public ResponseEntity<org.mikufans.entity.Tag> getTagById(@Parameter(description = "标签ID") @PathVariable Long id) {
+  public ResponseEntity<org.mikufans.entity.Tag> getTagById(@Parameter(description = "标签ID") @PathVariable String id) {
     org.mikufans.entity.Tag tag = tagService.getTagById(id);
     if (tag == null) {
       return ResponseEntity.notFound().build();
@@ -61,16 +63,16 @@ public class TagController {
    */
   @Operation(summary = "创建标签", description = "新增标签信息")
   @PostMapping
-  public ResponseEntity<org.mikufans.entity.Tag> createTag(@Parameter(description = "标签信息") @RequestBody org.mikufans.entity.Tag tag) {
+  public ResponseEntity<String> createTag(@Parameter(description = "标签信息") @RequestBody org.mikufans.entity.Tag tag) {
     // 检查标签名是否已存在
-    if (tagService.getTagByName(tag.getName()) != null) {
-      return ResponseEntity.badRequest().build();
+    if (!tagService.getTagByName(tag.getName()).isEmpty()) {
+      return ResponseEntity.badRequest().body("标签名已存在");
     }
 
     if (tagService.saveTag(tag)) {
-      return ResponseEntity.ok(tag);
+      return ResponseEntity.ok("标签创建成功");
     }
-    return ResponseEntity.internalServerError().build();
+    return ResponseEntity.internalServerError().body("标签创建失败");
   }
 
   /**
@@ -83,7 +85,7 @@ public class TagController {
   @Operation(summary = "更新标签", description = "根据ID更新标签信息")
   @PutMapping("/{id}")
   public ResponseEntity<org.mikufans.entity.Tag> updateTag(
-          @Parameter(description = "标签ID") @PathVariable Long id,
+          @Parameter(description = "标签ID") @PathVariable String id,
           @Parameter(description = "标签信息") @RequestBody org.mikufans.entity.Tag tag) {
     // 检查标签是否存在
     if (tagService.getTagById(id) == null) {
@@ -107,7 +109,7 @@ public class TagController {
    */
   @Operation(summary = "删除标签", description = "根据ID删除标签")
   @DeleteMapping("/{id}")
-  public ResponseEntity<Void> deleteTag(@Parameter(description = "标签ID") @PathVariable Long id) {
+  public ResponseEntity<Void> deleteTag(@Parameter(description = "标签ID") @PathVariable String id) {
     // 检查标签是否存在
     if (tagService.getTagById(id) == null) {
       return ResponseEntity.notFound().build();
@@ -127,11 +129,11 @@ public class TagController {
    */
   @Operation(summary = "根据名称查询标签", description = "根据标签名称查询标签信息")
   @GetMapping("/search")
-  public ResponseEntity<org.mikufans.entity.Tag> getTagByName(@Parameter(description = "标签名称") @RequestParam String name) {
-    org.mikufans.entity.Tag tag = tagService.getTagByName(name);
-    if (tag == null) {
+  public ResponseEntity<List<org.mikufans.entity.Tag>> getTagByName(@Parameter(description = "标签名称") @RequestParam String name) {
+    List<org.mikufans.entity.Tag> tags = tagService.getTagByName(name);
+    if (tags.isEmpty()) {
       return ResponseEntity.notFound().build();
     }
-    return ResponseEntity.ok(tag);
+    return ResponseEntity.ok(tags);
   }
 }

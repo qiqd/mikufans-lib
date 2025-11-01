@@ -51,7 +51,7 @@ public class AnimationController {
   @Operation(summary = "获取动画详情", description = "根据ID获取动画详细信息")
   @GetMapping("/{id}")
   public ResponseEntity<Animation> getAnimationById(
-          @Parameter(description = "动画ID") @PathVariable Long id) {
+          @Parameter(description = "动画ID") @PathVariable String id) {
     Animation animation = animationService.getAnimationById(id);
     if (animation == null) {
       return ResponseEntity.notFound().build();
@@ -102,7 +102,7 @@ public class AnimationController {
   @Operation(summary = "删除动画", description = "根据ID删除动画作品")
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteAnimation(
-          @Parameter(description = "动画ID") @PathVariable Long id) {
+          @Parameter(description = "动画ID") @PathVariable String id) {
     boolean deleted = animationService.deleteAnimation(id);
     if (!deleted) {
       return ResponseEntity.notFound().build();

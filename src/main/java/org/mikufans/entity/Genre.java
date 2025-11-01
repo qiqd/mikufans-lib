@@ -1,9 +1,8 @@
 package org.mikufans.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 
@@ -11,15 +10,15 @@ import java.time.LocalDate;
  * 作品类型表实体类（Genre）
  * 用于分类作品主题
  */
-@Schema(description = "分类信息")
 @Data
+@Document(collection = "genres")
+@Schema(description = "分类信息")
 public class Genre {
   /**
    * 主键，自增ID
    */
   @Schema(description = "分类ID", example = "1")
-  @TableId(type = IdType.AUTO)
-  private Long id;
+  private String id;
 
   /**
    * 类型名称（如 Action, Comedy）

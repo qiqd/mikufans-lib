@@ -1,6 +1,5 @@
 package org.mikufans.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
 import org.mikufans.entity.Game;
 import org.mikufans.entity.MyPage;
 
@@ -10,7 +9,7 @@ import java.util.List;
  * Game服务层接口
  * 定义游戏实体的业务逻辑方法
  */
-public interface GameService extends IService<Game> {
+public interface GameService {
   /**
    * 获取所有游戏（分页）
    *
@@ -26,7 +25,7 @@ public interface GameService extends IService<Game> {
    * @param id 游戏ID
    * @return 游戏实体
    */
-  Game getGameById(Long id);
+  Game getGameById(String id);
 
   /**
    * 创建新游戏
@@ -48,5 +47,13 @@ public interface GameService extends IService<Game> {
    * @param id 游戏ID
    * @return 是否删除成功
    */
-  boolean deleteGame(Long id);
+  boolean deleteGame(String id);
+
+  /**
+   * 根据名称获取游戏
+   *
+   * @param name 游戏名称
+   * @return 游戏实体
+   */
+  List<Game> getGameByTitle(String name);
 }

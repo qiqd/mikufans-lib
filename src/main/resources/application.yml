@@ -3,15 +3,12 @@ spring:
     active: dev
   application:
     name: mikufans-lib
-  datasource:
-    type: com.alibaba.druid.pool.DruidDataSource
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/mikufans_lib?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&allowPublicKeyRetrieval=true
-    username: root
-    password: 12345
-server:
-  port: 8080
+  data:
+    mongodb:
+      uri: mongodb://localhost/test
 logging:
   level:
     root: info
     org.mikufans: debug
+server:
+  port: 45279

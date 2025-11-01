@@ -3,6 +3,8 @@ package org.mikufans.entity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,8 +13,9 @@ import java.util.List;
  * 动画作品表实体类
  * 包含所有动画的完整信息
  */
-@Schema(description = "动画作品信息")
 @Data
+@Document(collection = "animations")
+@Schema(description = "动画作品信息")
 @EqualsAndHashCode(callSuper = true)
 public class Animation extends BaseWork {
   /**
@@ -48,12 +51,14 @@ public class Animation extends BaseWork {
   /**
    * 导演
    */
+  @Indexed(background = true)
   @Schema(description = "导演", example = "新海诚")
   private String director;
 
   /**
    * 编剧
    */
+  @Indexed(background = true)
   @Schema(description = "编剧", example = "虚渊玄")
   private String scriptWriter;
 
@@ -72,6 +77,7 @@ public class Animation extends BaseWork {
   /**
    * 主要声优列表，存储为 JSON 字符串
    */
+  @Indexed(background = true)
   @Schema(description = "主要声优列表", example = "[\"花江夏树\", \"鬼头明里\", \"下野纮\"]")
   private List<String> mainVoiceActors;
 

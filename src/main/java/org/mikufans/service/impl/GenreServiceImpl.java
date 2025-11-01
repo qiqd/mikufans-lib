@@ -1,16 +1,17 @@
 package org.mikufans.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.mikufans.entity.Genre;
 import org.mikufans.entity.MyPage;
-import org.mikufans.mapper.GenreMapper;
+import org.mikufans.repository.GenreRepository;
 import org.mikufans.service.GenreService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Genre服务层实现类
@@ -18,44 +19,47 @@ import java.time.LocalDate;
  */
 @Service
 @RequiredArgsConstructor
-public class GenreServiceImpl extends ServiceImpl<GenreMapper, Genre> implements GenreService {
+public class GenreServiceImpl implements GenreService {
 
-
-  private final GenreMapper genreMapper;
+  private final GenreRepository genreRepository;
 
   @Override
   public MyPage<Genre> getAllGenres(Integer page, Integer size) {
-    Page<Genre> genrePage = new Page<>(page, size);
-    Page<Genre> pageResult = query().page(genrePage);
-    return new MyPage<>(page, size.longValue(), pageResult.getPages(), pageResult.getTotal(), pageResult.getRecords());
+    Pageable pageable = PageRequest.of(page - 1, size);
+    org.springframework.data.domain.Page<Genre> pageResult = genreRepository.findAll(pageable);
+    List<Genre> records = pageResult.getContent();
+    return new MyPage<>(page, size.longValue(), (long) pageResult.getTotalPages(), pageResult.getTotalElements(), records);
   }
 
   @Override
-  public Genre getGenreById(Long id) {
-    return genreMapper.selectById(id);
+  public Genre getGenreById(String id) {
+    return genreRepository.findById(id).orElse(null);
   }
 
   @Override
+  @Transactional(rollbackFor = Exception.class)
   public boolean saveGenre(Genre genre) {
     // 设置创建时间
+    genre.setId(null);
     genre.setCreatedAt(LocalDate.now());
-    return save(genre);
+    genreRepository.save(genre);
+    return true;
   }
 
   @Override
   public boolean updateGenre(Genre genre) {
-    return updateById(genre);
+    genreRepository.save(genre);
+    return true;
   }
 
   @Override
-  public boolean deleteGenre(Long id) {
-    return removeById(id);
+  public boolean deleteGenre(String id) {
+    genreRepository.deleteById(id);
+    return true;
   }
 
   @Override
-  public Genre getGenreByName(String name) {
-    QueryWrapper<Genre> wrapper = new QueryWrapper<>();
-    wrapper.eq("name", name);
-    return genreMapper.selectOne(wrapper);
+  public List<Genre> getGenreByName(String name) {
+    return genreRepository.findAllByNameContaining(name);
   }
 }

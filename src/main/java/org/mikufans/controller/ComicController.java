@@ -49,7 +49,7 @@ public class ComicController {
   @Operation(summary = "获取漫画详情", description = "根据ID获取漫画详细信息")
   @GetMapping("/{id}")
   public ResponseEntity<Comic> getComicById(
-          @Parameter(description = "漫画ID") @PathVariable Long id) {
+          @Parameter(description = "漫画ID") @PathVariable String id) {
     Comic comic = comicService.getComicById(id);
     if (comic == null) {
       return ResponseEntity.notFound().build();
@@ -79,9 +79,7 @@ public class ComicController {
    */
   @Operation(summary = "更新漫画", description = "根据ID更新漫画信息")
   @PutMapping("/{id}")
-  public ResponseEntity<Comic> updateComic(
-          @Parameter(description = "漫画ID") @PathVariable Long id,
-          @Parameter(description = "漫画信息") @RequestBody Comic comic) {
+  public ResponseEntity<Comic> updateComic(@Parameter(description = "漫画信息") @RequestBody Comic comic) {
     comicService.updateComic(comic);
     return ResponseEntity.ok(comic);
   }
@@ -95,7 +93,7 @@ public class ComicController {
   @Operation(summary = "删除漫画", description = "根据ID删除漫画作品")
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteComic(
-          @Parameter(description = "漫画ID") @PathVariable Long id) {
+          @Parameter(description = "漫画ID") @PathVariable String id) {
     boolean deleted = comicService.deleteComic(id);
     if (!deleted) {
       return ResponseEntity.notFound().build();

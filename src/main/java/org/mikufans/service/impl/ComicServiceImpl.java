@@ -1,13 +1,14 @@
 package org.mikufans.service.impl;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.mikufans.entity.Comic;
 import org.mikufans.entity.MyPage;
-import org.mikufans.mapper.ComicMapper;
+import org.mikufans.repository.ComicRepository;
 import org.mikufans.service.ComicService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,34 +18,43 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
-public class ComicServiceImpl extends ServiceImpl<ComicMapper, Comic> implements ComicService {
+public class ComicServiceImpl implements ComicService {
 
-  private final ComicMapper comicMapper;
+  private final ComicRepository comicRepository;
 
   @Override
   public MyPage<Comic> getAllComics(Integer page, Integer size) {
-    Page<Comic> pageResult = comicMapper.selectPage(new Page<>(page, size), null);
-    return new MyPage<>(page, size.longValue(), pageResult.getPages(), pageResult.getTotal(), pageResult.getRecords());
+    Pageable pageable = PageRequest.of(page - 1, size);
+    org.springframework.data.domain.Page<Comic> pageResult = comicRepository.findAll(pageable);
+    List<Comic> records = pageResult.getContent();
+    return new MyPage<>(page, size.longValue(), (long) pageResult.getTotalPages(), pageResult.getTotalElements(), records);
   }
 
   @Override
-  public Comic getComicById(Long id) {
-    return comicMapper.selectById(id);
+  public Comic getComicById(String id) {
+    return comicRepository.findById(id).orElse(null);
   }
 
   @Override
+  @Transactional(rollbackFor = Exception.class)
   public void saveBatchComic(List<Comic> comics) {
     comics.forEach(comic -> comic.setId(null));
-    comicMapper.insert(comics);
+    comicRepository.saveAll(comics);
   }
 
   @Override
   public void updateComic(Comic comic) {
-    comicMapper.updateById(comic);
+    comicRepository.save(comic);
   }
 
   @Override
-  public boolean deleteComic(Long id) {
-    return comicMapper.deleteById(id) > 0;
+  public boolean deleteComic(String id) {
+    comicRepository.deleteById(id);
+    return true;
+  }
+
+  @Override
+  public List<Comic> getComicByTitle(String name) {
+    return comicRepository.findByTitleContaining(name);
   }
 }

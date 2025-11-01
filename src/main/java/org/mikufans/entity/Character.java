@@ -1,9 +1,9 @@
 package org.mikufans.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,19 +13,20 @@ import java.util.Map;
  * ACG人物统一表实体类
  * 包含剧中角色与现实人物（声优、作者等）
  */
-@Schema(description = "ACG角色信息")
 @Data
+@Document(collection = "characters")
+@Schema(description = "ACG角色信息")
 public class Character {
   /**
    * 主键，自增ID
    */
   @Schema(description = "角色ID", example = "1")
-  @TableId(type = IdType.AUTO)
-  private Long id;
+  private String id;
 
   /**
    * 角色或人物名称
    */
+  @Indexed(background = true)
   @Schema(description = "角色名称", example = "炭治郎")
   private String name;
 

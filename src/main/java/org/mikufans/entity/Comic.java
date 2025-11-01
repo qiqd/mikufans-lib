@@ -3,6 +3,8 @@ package org.mikufans.entity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 
@@ -11,6 +13,8 @@ import java.time.LocalDate;
  * 包含所有漫画的完整信息
  */
 @Data
+@Document(collection = "comics")
+@Schema(description = "漫画作品信息")
 @EqualsAndHashCode(callSuper = true)
 public class Comic extends BaseWork {
   /**
@@ -28,18 +32,21 @@ public class Comic extends BaseWork {
   /**
    * 作者
    */
+  @Indexed(background = true)
   @Schema(description = "作者", example = "吾峠呼世晴")
   private String author;
 
   /**
    * 画师（若与作者不同）
    */
+  @Indexed(background = true)
   @Schema(description = "作画", example = "大久保笃")
   private String artist;
 
   /**
    * 出版社
    */
+  @Indexed(background = true)
   @Schema(description = "出版社", example = "集英社")
   private String publisher;
 

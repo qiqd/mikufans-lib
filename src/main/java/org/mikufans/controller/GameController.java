@@ -48,7 +48,7 @@ public class GameController {
    */
   @Operation(summary = "获取游戏详情", description = "根据ID获取游戏详细信息")
   @GetMapping("/{id}")
-  public ResponseEntity<Game> getGameById(@Parameter(description = "游戏ID") @PathVariable Long id) {
+  public ResponseEntity<Game> getGameById(@Parameter(description = "游戏ID") @PathVariable String id) {
     Game game = gameService.getGameById(id);
     if (game == null) {
       return ResponseEntity.notFound().build();
@@ -90,7 +90,7 @@ public class GameController {
    */
   @Operation(summary = "删除游戏", description = "根据ID删除游戏作品")
   @DeleteMapping("/{id}")
-  public ResponseEntity<Void> deleteGame(@Parameter(description = "游戏ID") @PathVariable Long id) {
+  public ResponseEntity<Void> deleteGame(@Parameter(description = "游戏ID") @PathVariable String id) {
     boolean deleted = gameService.deleteGame(id);
     if (!deleted) {
       return ResponseEntity.notFound().build();
