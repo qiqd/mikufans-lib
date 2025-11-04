@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 作品基类
@@ -44,6 +45,13 @@ public class BaseWork {
   private String englishTitle;
 
   /**
+   * 英文名称
+   */
+  @Indexed(background = true)
+  @Schema(description = "其他名称", example = "Demon Slayer")
+  private List<String> otherTitle;
+
+  /**
    * 作品简介
    */
   @Schema(description = "作品简介", example = "大正时期，主人公炭治郎的家人被鬼杀害...")
@@ -78,6 +86,11 @@ public class BaseWork {
    */
   @Schema(description = "封面图URL", example = "https://example.com/cover.jpg")
   private String coverImageUrl;
+  /**
+   * 封面图URL-small
+   */
+  @Schema(description = "封面图URL-small", example = "https://example.com/cover.jpg")
+  private String coverImageUrlSmall;
 
   /**
    * 官方网站链接

@@ -13,8 +13,7 @@ logging:
     org.mikufans: debug
     org.springframework.data.mongodb: debug
   file:
-    path: /log/mikufans-lib
-    name: mikufans-lib.log
+    name: ./log/mikufans-librarians-lib.log
   logback:
     rolling policy:
       max-file-size: 5MB

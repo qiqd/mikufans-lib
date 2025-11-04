@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -33,12 +34,16 @@ public class AnimationServiceImpl implements AnimationService {
   @Override
   @Transactional(rollbackFor = Exception.class)
   public void saveBatchAnimations(List<Animation> animations) {
-    animations.forEach(animation -> animation.setId(null));
+    animations.forEach(animation -> {
+      animation.setId(null);
+      animation.setCreatedAt(LocalDateTime.now());
+    });
     animationRepository.saveAll(animations);
   }
 
   @Override
   public boolean updateAnimation(Animation animation) {
+    animation.setUpdatedAt(LocalDateTime.now());
     animationRepository.save(animation);
     return true;
   }

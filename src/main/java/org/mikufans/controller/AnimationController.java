@@ -81,14 +81,14 @@ public class AnimationController {
    */
   @Operation(summary = "更新动画", description = "更新动画信息")
   @PutMapping
-  public ResponseEntity<Animation> updateAnimation(
+  public ResponseEntity<String> updateAnimation(
           @Parameter(description = "动画信息") @RequestBody Animation animation) {
     if (animationService.getAnimationById(animation.getId()) == null) {
       return ResponseEntity.notFound().build();
     }
     boolean updated = animationService.updateAnimation(animation);
     if (updated) {
-      return ResponseEntity.ok(animation);
+      return ResponseEntity.ok("更新动画成功，更新时间为：" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
     }
     return ResponseEntity.internalServerError().build();
   }
@@ -159,9 +159,9 @@ public class AnimationController {
    * @return 动画列表
    */
   @Operation(summary = "根据名称查询", description = "查询指定名称的所有动画")
-  @GetMapping("/by-name/{name}")
+  @GetMapping("/by-name")
   public ResponseEntity<List<Animation>> getAnimationsByName(
-          @Parameter(description = "动画名称") @PathVariable String name) {
+          @Parameter(description = "动画名称") @RequestParam("name") String name) {
     List<Animation> animations = animationService.getAnimationsByTitle(name);
     return ResponseEntity.ok(animations);
   }
