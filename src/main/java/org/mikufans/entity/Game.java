@@ -3,7 +3,7 @@ package org.mikufans.entity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.mikufans.entity.base.BaseWork;
+import org.mikufans.entity.base.Work;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -17,7 +17,7 @@ import java.util.List;
 @Schema(description = "游戏作品信息")
 @Document(collection = "games")
 @EqualsAndHashCode(callSuper = true)
-public class Game extends BaseWork {
+public class Game extends Work {
   /**
    * 开发公司
    */

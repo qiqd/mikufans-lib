@@ -1,8 +1,8 @@
 package org.mikufans.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.mikufans.entity.Genre;
-import org.mikufans.entity.MyPage;
+import org.mikufans.entity.base.Genre;
+import org.mikufans.entity.base.MyPage;
 import org.mikufans.repository.GenreRepository;
 import org.mikufans.service.GenreService;
 import org.springframework.data.domain.PageRequest;

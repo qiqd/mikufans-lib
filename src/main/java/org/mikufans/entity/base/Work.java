@@ -15,7 +15,7 @@ import java.util.List;
  */
 @Data
 @Schema(description = "作品基类，封装ACG作品的公共属性")
-public class BaseWork {
+public class Work {
   /**
    * 主键，自增ID
    */

@@ -1,6 +1,6 @@
 package org.mikufans.repository;
 
-import org.mikufans.entity.Tag;
+import org.mikufans.entity.base.Tag;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

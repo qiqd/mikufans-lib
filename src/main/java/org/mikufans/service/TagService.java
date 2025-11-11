@@ -1,7 +1,7 @@
 package org.mikufans.service;
 
-import org.mikufans.entity.MyPage;
-import org.mikufans.entity.Tag;
+import org.mikufans.entity.base.MyPage;
+import org.mikufans.entity.base.Tag;
 
 import java.util.List;
 

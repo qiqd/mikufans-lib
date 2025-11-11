@@ -1,4 +1,4 @@
-package org.mikufans.entity;
+package org.mikufans.entity.base;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

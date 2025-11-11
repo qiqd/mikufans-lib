@@ -1,7 +1,7 @@
 package org.mikufans.service;
 
 import org.mikufans.entity.Comic;
-import org.mikufans.entity.MyPage;
+import org.mikufans.entity.base.MyPage;
 
 import java.util.List;
 

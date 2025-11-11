@@ -3,7 +3,7 @@ package org.mikufans.entity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.mikufans.entity.base.BaseWork;
+import org.mikufans.entity.base.Work;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @Document(collection = "comics")
 @Schema(description = "漫画作品信息")
 @EqualsAndHashCode(callSuper = true)
-public class Comic extends BaseWork {
+public class Comic extends Work {
   /**
    * 总章节数
    */

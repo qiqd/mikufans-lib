@@ -2,7 +2,7 @@ package org.mikufans.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.mikufans.entity.Animation;
-import org.mikufans.entity.MyPage;
+import org.mikufans.entity.base.MyPage;
 import org.mikufans.repository.AnimationRepository;
 import org.mikufans.service.AnimationService;
 import org.springframework.data.domain.PageRequest;

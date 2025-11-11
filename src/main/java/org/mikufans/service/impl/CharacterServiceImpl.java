@@ -2,7 +2,7 @@ package org.mikufans.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.mikufans.entity.Character;
-import org.mikufans.entity.MyPage;
+import org.mikufans.entity.base.MyPage;
 import org.mikufans.repository.CharacterRepository;
 import org.mikufans.service.CharacterService;
 import org.springframework.data.domain.PageRequest;

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.mikufans.entity.Result;
+import org.mikufans.entity.base.Result;
 import org.mikufans.util.JwtUtil;
 import org.mikufans.util.UserContent;
 import org.springframework.stereotype.Component;

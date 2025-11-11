@@ -1,6 +1,6 @@
 package org.mikufans.repository;
 
-import org.mikufans.entity.Genre;
+import org.mikufans.entity.base.Genre;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

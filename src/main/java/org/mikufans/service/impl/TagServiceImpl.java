@@ -1,8 +1,8 @@
 package org.mikufans.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.mikufans.entity.MyPage;
-import org.mikufans.entity.Tag;
+import org.mikufans.entity.base.MyPage;
+import org.mikufans.entity.base.Tag;
 import org.mikufans.repository.TagRepository;
 import org.mikufans.service.TagService;
 import org.springframework.data.domain.PageRequest;

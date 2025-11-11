@@ -1,4 +1,4 @@
-package org.mikufans.entity;
+package org.mikufans.entity.base;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
