@@ -1,4 +1,4 @@
-package org.mikufans.entity;
+package org.mikufans.entity.base;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -85,12 +85,8 @@ public class BaseWork {
    * 封面图URL
    */
   @Schema(description = "封面图URL", example = "https://example.com/cover.jpg")
-  private String coverImageUrl;
-  /**
-   * 封面图URL-small
-   */
-  @Schema(description = "封面图URL-small", example = "https://example.com/cover.jpg")
-  private String coverImageUrlSmall;
+  private Image image;
+
 
   /**
    * 官方网站链接
@@ -155,12 +151,12 @@ public class BaseWork {
    * 分类
    */
   @Indexed(background = true)
-  @Schema(description = "分类", example = "爱情")
-  private String genre;
+  @Schema(description = "分类", example = "[\"校园\", \"战斗\", \"爱情\"]")
+  private List<String> genres;
 
   /**
    * 单集更新时间，比如“每周三/20：00”
    */
-  @Schema(description = "单集更新时间", example = "每周三20：00")
+  @Schema(description = "单集更新时间", example = "每周三20:00")
   private String singleUpdateTime;
 }

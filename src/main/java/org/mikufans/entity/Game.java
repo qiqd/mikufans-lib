@@ -3,6 +3,7 @@ package org.mikufans.entity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.mikufans.entity.base.BaseWork;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -33,7 +34,7 @@ public class Game extends BaseWork {
   /**
    * 支持平台，存储为 JSON 字符串
    */
-  @Schema(description = "支持平台", example = "PC,PS5,Xbox")
+  @Schema(description = "支持平台", example = "[\"PC\", \"PS5\", \"Xbox\"]")
   private List<String> platforms;
 
   /**

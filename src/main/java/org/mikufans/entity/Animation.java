@@ -3,6 +3,7 @@ package org.mikufans.entity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.mikufans.entity.base.BaseWork;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -52,21 +53,21 @@ public class Animation extends BaseWork {
    * 导演
    */
   @Indexed(background = true)
-  @Schema(description = "导演", example = "新海诚")
-  private String director;
+  @Schema(description = "导演", example = "[\"新海诚\", \"虚渊玄\"]")
+  private List<String> directors;
 
   /**
    * 编剧
    */
   @Indexed(background = true)
-  @Schema(description = "编剧", example = "虚渊玄")
-  private String scriptWriter;
+  @Schema(description = "编剧", example = "[\"虚渊玄\", \"新海诚\"]")
+  private List<String> scriptWriters;
 
   /**
    * 音乐制作
    */
-  @Schema(description = "音乐制作", example = "梶浦由记")
-  private String musicComposer;
+  @Schema(description = "音乐制作, 多个音乐制作人员之间用逗号分隔", example = "[\"梶浦由记\", \"新海诚\"]")
+  private List<String> musicComposers;
 
   /**
    * 动画制作公司
@@ -78,7 +79,7 @@ public class Animation extends BaseWork {
    * 主要声优列表，存储为 JSON 字符串
    */
   @Indexed(background = true)
-  @Schema(description = "主要声优列表", example = "[\"花江夏树\", \"鬼头明里\", \"下野纮\"]")
+  @Schema(description = "主要声优列表, 多个声优之间用逗号分隔", example = "[\"花江夏树\", \"鬼头明里\", \"下野纮\"]")
   private List<String> mainVoiceActors;
 
   /**

@@ -3,6 +3,7 @@ package org.mikufans.entity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.mikufans.entity.base.BaseWork;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -59,20 +60,24 @@ public class Comic extends BaseWork {
   /**
    * 首次发表日期
    */
+  @Schema(description = "首次发表日期", example = "2023-01-01")
   private LocalDate firstPublishedDate;
 
   /**
    * 最后发表日期
    */
+  @Schema(description = "最后发表日期", example = "2023-01-01")
   private LocalDate lastPublishedDate;
 
   /**
    * 目标受众：SHONEN, SHOJO, SEINEN, JOSEI, KIDS
    */
+  @Schema(description = "目标受众", allowableValues = "SHONEN, SHOJO, SEINEN, JOSEI, KIDS", example = "SHONEN")
   private String demographic;
 
   /**
    * 是否已完结（冗余字段，便于快速查询）
    */
+  @Schema(description = "是否已完结", example = "true")
   private Boolean isCompleted;
 }
