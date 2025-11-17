@@ -10,7 +10,7 @@ import java.util.List;
 public interface AnimationRepository extends MongoRepository<Animation, String> {
   List<Animation> findAnimationByAnimationStudio(String animationStudio);
 
-  List<Animation> findAnimationByDirector(String director);
+  List<Animation> findAnimationByDirectors(List<String> directors);
 
   List<Animation> findAnimationByBroadcastPlatform(String broadcastPlatform);
 

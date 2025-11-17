@@ -5,8 +5,8 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,8 +19,8 @@ public class Work {
   /**
    * 主键，自增ID
    */
-  @Schema(description = "主键ID", example = "1")
   @Id
+  @Schema(description = "主键ID", example = "1")
   private String id;
 
   /**
@@ -48,7 +48,7 @@ public class Work {
    * 英文名称
    */
   @Indexed(background = true)
-  @Schema(description = "其他名称", example = "Demon Slayer")
+  @Schema(description = "其他名称", example = "[\"Demon Slayer\"]")
   private List<String> otherTitle;
 
   /**
@@ -61,7 +61,7 @@ public class Work {
    * 发布日期
    */
   @Schema(description = "发布日期", example = "2019-04-06")
-  private Date releaseDate;
+  private LocalDate releaseDate;
 
   /**
    * 制作/开发国家/地区
@@ -99,6 +99,12 @@ public class Work {
    */
   @Schema(description = "平均评分", allowableValues = "0.00-10.00", example = "9.5")
   private Float averageRating;
+
+  /**
+   * 评分人数
+   */
+  @Schema(description = "评分人数", example = "1000000")
+  private Long ratingCount;
 
   /**
    * 总观看/阅读/浏览次数

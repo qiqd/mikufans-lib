@@ -2,6 +2,7 @@ package org.mikufans.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import org.mikufans.entity.base.Image;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -38,8 +39,8 @@ public class Character {
   /**
    * 头像或照片URL
    */
-  @Schema(description = "角色图片URL", example = "https://example.com/char.png")
-  private String imageUrl;
+  @Schema(description = "角色图片URL", example = "[\"small\": \"small.jpg\", \"medium\": \"medium.jpg\", \"large\": \"large.jpg\"]")
+  private Image image;
 
   /**
    * 简介

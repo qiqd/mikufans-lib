@@ -1,7 +1,6 @@
 package org.mikufans.config;
 
-import lombok.AllArgsConstructor;
-import org.mikufans.interceptor.JwtInterceptor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -12,10 +11,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * 用于配置拦截器等Web相关设置
  */
 @Configuration
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
-  private final JwtInterceptor jwtInterceptor;
+//  private final JwtInterceptor jwtInterceptor;
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {

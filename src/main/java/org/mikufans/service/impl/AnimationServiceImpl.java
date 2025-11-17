@@ -61,7 +61,7 @@ public class AnimationServiceImpl implements AnimationService {
 
   @Override
   public List<Animation> getAnimationsByDirector(String director) {
-    return animationRepository.findAnimationByDirector(director);
+    return animationRepository.findAnimationByDirectors(List.of(director));
   }
 
   @Override

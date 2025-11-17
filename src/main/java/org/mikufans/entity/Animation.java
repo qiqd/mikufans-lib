@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 动画作品表实体类
@@ -79,8 +80,8 @@ public class Animation extends Work {
    * 主要声优列表，存储为 JSON 字符串
    */
   @Indexed(background = true)
-  @Schema(description = "主要声优列表, 多个声优之间用逗号分隔", example = "[\"花江夏树\", \"鬼头明里\", \"下野纮\"]")
-  private List<String> mainVoiceActors;
+  @Schema(description = "主要角色以及对应的声优", example = "{\"空条承太郎\": \"小野大辅\", \"迪奥·布兰度\": \"子安武人\"}")
+  private Map<String, String> mainVoiceActors;
 
   /**
    * 改编来源（如"漫画改编"、"轻小说改编"）
