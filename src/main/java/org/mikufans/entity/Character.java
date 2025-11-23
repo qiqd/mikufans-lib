@@ -32,6 +32,13 @@ public class Character {
   private String name;
 
   /**
+   * 其他名称列表
+   */
+  @Indexed(background = true)
+  @Schema(description = "角色其他名称列表", example = "[\"炭治郎\", \"炭治郎 Jr.\"]")
+  private List<String> otherNames;
+
+  /**
    * 类型：FICTIONAL（虚构角色）或 REAL（现实人物）
    */
   private String type;
@@ -116,6 +123,12 @@ public class Character {
    */
   @Schema(description = "配音演员ID", example = "1")
   private String voiceActorId;
+
+  /**
+   * 所属媒体id，比如动画id、漫画id等，若是现实人物则为null
+   */
+  @Schema(description = "所属媒体ID", example = "1")
+  private String mediaId;
 
   /**
    * 创建时间

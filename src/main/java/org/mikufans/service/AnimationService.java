@@ -2,8 +2,14 @@ package org.mikufans.service;
 
 import org.mikufans.entity.Animation;
 import org.mikufans.entity.base.MyPage;
+import org.mikufans.entity.request.UpdateFieldById;
+import org.mikufans.entity.response.TitleListResponse;
+import org.mikufans.entity.response.UpdateResponse;
+import org.springframework.data.domain.Page;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public interface AnimationService {
   /**
@@ -77,4 +83,25 @@ public interface AnimationService {
    * @return 动画列表
    */
   List<Animation> getAnimationsByTitle(String name);
+
+  /**
+   * 批量更新动画字段
+   *
+   * @param updateFieldById 包含动画ID和要更新的字段的列表
+   * @return 是否更新成功
+   */
+  <T> UpdateResponse bulkUpdateByIdsAndField(String fieldName, List<UpdateFieldById<T>> updateFieldById);
+
+  /**
+   * 根据年份分页查询动画
+   *
+   * @param start 开始日期
+   * @param end   结束日期
+   * @param page  页码
+   * @param size  每页大小
+   * @return 动画列表
+   */
+  Page<Animation> getAnimationsByYear(LocalDate start, LocalDate end, Integer page, Integer size);
+
+  Map<String, Integer> updateImageBatch(List<TitleListResponse> titleListResponses);
 }

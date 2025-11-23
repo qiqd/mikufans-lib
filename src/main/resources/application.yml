@@ -5,8 +5,11 @@ spring:
     name: mikufans-lib
   data:
     mongodb:
-      uri: mongodb://localhost/test
       auto-index-creation: true
+      uri: mongodb://root:z7c4vsgl@dbprovider.ap-northeast-1.clawcloudrun.com:31648/?directConnection=true
+      database: mikufans-db
+  jackson:
+    time-zone: GMT+8
 logging:
   level:
     root: info
