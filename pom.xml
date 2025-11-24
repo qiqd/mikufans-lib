@@ -98,6 +98,12 @@
       <artifactId>playwright</artifactId>
       <version>1.48.0</version>
     </dependency>
+    <!-- Apache Commons Text - 包含多种文本处理工具，包括相似度计算 -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-text</artifactId>
+      <version>1.10.0</version>
+    </dependency>
   </dependencies>
 
   <build>

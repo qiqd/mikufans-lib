@@ -1,7 +1,7 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost:27017/mikufans_lib
-      database: mikufans_lib
+      uri: mongodb://localhost:27017/mikufans-db
+      database: mikufans-db
 server:
   port: 8080

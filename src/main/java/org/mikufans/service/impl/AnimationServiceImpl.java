@@ -5,12 +5,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mikufans.entity.Animation;
 import org.mikufans.entity.base.Image;
+import org.mikufans.entity.base.Item;
 import org.mikufans.entity.base.MyPage;
+import org.mikufans.entity.base.Person;
 import org.mikufans.entity.request.UpdateFieldById;
 import org.mikufans.entity.response.TitleListResponse;
+import org.mikufans.entity.response.TitleResponse;
 import org.mikufans.entity.response.UpdateResponse;
+import org.mikufans.parser.DoubanParse;
 import org.mikufans.repository.AnimationRepository;
 import org.mikufans.service.AnimationService;
+import org.mikufans.service.playwright.WebScraperService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,9 +32,11 @@ import org.tetofans.util.HtmlParser;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -38,7 +45,8 @@ public class AnimationServiceImpl implements AnimationService {
   private final AnimationRepository animationRepository;
   private final MongoTemplate mongoTemplate;
   private final HtmlParser htmlParser;
-
+  private final WebScraperService webScraperService;
+  private final DoubanParse doubanParse;
 
   @Override
   public MyPage<Animation> getAllAnimations(Integer page, Integer size) {
@@ -83,7 +91,9 @@ public class AnimationServiceImpl implements AnimationService {
 
   @Override
   public List<Animation> getAnimationsByDirector(String director) {
-    return animationRepository.findAnimationByDirectors(List.of(director));
+    Person person = new Person();
+    person.setName(director);
+    return List.of();
   }
 
   @Override
@@ -94,16 +104,16 @@ public class AnimationServiceImpl implements AnimationService {
   @Override
   public List<Animation> getAnimationsByTitle(String name) {
     // 首先尝试在中文标题中搜索
-    List<Animation> results = animationRepository.findAnimationByTitleContaining(name);
+    List<Animation> results = animationRepository.findAnimationByTitleCnContaining(name);
 
     // 如果中文标题没有结果，尝试搜索原名
     if (results.isEmpty()) {
-      results = animationRepository.findAnimationByOriginalTitleContaining(name);
+      results = animationRepository.findAnimationByTitleContaining(name);
     }
 
     // 如果原名也没有结果，尝试搜索英文标题
     if (results.isEmpty()) {
-      results = animationRepository.findAnimationByEnglishTitleContaining(name);
+      results = animationRepository.findAnimationByTitleEnContaining(name);
     }
     return results;
   }
@@ -118,9 +128,7 @@ public class AnimationServiceImpl implements AnimationService {
         bulkOps.updateOne(query, update);
       }
       BulkWriteResult result = bulkOps.execute();
-      return new UpdateResponse(true, (long) updateFieldById.size(),
-              (long) result.getMatchedCount(),
-              (long) result.getModifiedCount());
+      return new UpdateResponse(true, (long) updateFieldById.size(), (long) result.getMatchedCount(), (long) result.getModifiedCount());
     } catch (Exception e) {
       log.error("批量更新动画字段失败：{}", e.getMessage());
       return new UpdateResponse(false, (long) updateFieldById.size(), 0L, 0L);
@@ -128,10 +136,17 @@ public class AnimationServiceImpl implements AnimationService {
   }
 
   @Override
-  public Page<Animation> getAnimationsByYear(LocalDate start, LocalDate end, Integer page, Integer size) {
-    Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.ASC, "releaseDate"));
-
-    return animationRepository.findByReleaseDateBetween(start, end, pageable);
+  public Page<Animation> getAnimationOptionally(LocalDate start, LocalDate end, Integer page, Integer size) {
+    Query query = new Query();
+    PageRequest request = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.ASC, "releaseDate"));
+    query.with(request);
+    if (end == null && start != null) {
+      end = start.plusYears(1).withMonth(1).withDayOfMonth(1);
+    }
+    if (start != null) {
+      return animationRepository.findByReleaseDateBetween(start, end, request);
+    }
+    return animationRepository.findAll(request);
   }
 
   @Override
@@ -146,10 +161,7 @@ public class AnimationServiceImpl implements AnimationService {
           String coverUrl = htmlParser.parseCoverUrl(title, AcgType.TV);
           if (!coverUrl.isBlank()) {
             Query query = new Query(Criteria.where("_id").is(titleListResponse.getId()));
-            Image image = Image.builder()
-                    .small(coverUrl.substring(0, coverUrl.indexOf("?")))
-                    .medium(coverUrl)
-                    .build();
+            Image image = Image.builder().small(coverUrl.substring(0, coverUrl.indexOf("?"))).medium(coverUrl).build();
             Update update = new Update().set("coverUrl", image);
             mongoTemplate.updateFirst(query, update, Animation.class);
             map.merge("success", 1, Integer::sum);
@@ -162,5 +174,53 @@ public class AnimationServiceImpl implements AnimationService {
       }
     });
     return map;
+  }
+
+  @Override
+  public UpdateResponse updateByTitles(List<TitleResponse> titleListResponses) throws Exception {
+    String BASE_URL = "https://movie.douban.com";
+    Long a = 0L;
+    for (TitleResponse item : titleListResponses) {
+      long start = System.currentTimeMillis();
+      try {
+        //index
+        String searchUrl = "https://search.douban.com/movie/subject_search?search_text=";
+        String html = webScraperService.fetchRenderedHtml(searchUrl + item.getTitleCn());
+        List<Item> idItem = doubanParse.getId(html, item.getTitleCn());
+        List<Animation> record = animationRepository.findBySubIdIn(idItem.stream().map(i -> i.getId().toString()).toList());
+        Map<String, Animation> animationMap = record.stream().collect(Collectors.toMap(Animation::getSubId, v -> v));
+        List<Item> target = idItem.stream().filter(i -> !animationMap.containsKey(i.getId().toString())).toList();
+        Thread.sleep((long) (Math.random() * 3000));
+        ArrayList<Animation> animations = new ArrayList<>();
+        for (Item subject : target) {
+          try {
+            String s = webScraperService.fetchRenderedHtml("https://movie.douban.com/subject/" + subject.getId() + "/");
+            Animation detail = doubanParse.getDetail(s);
+            detail.setSubId(subject.getId().toString());
+            Thread.sleep((long) (Math.random() * 3000));
+            String s1 = webScraperService.fetchRenderedHtml("https://movie.douban.com/subject/" + subject.getId() + "/celebrities");
+            Animation staff = doubanParse.getStaff(s1);
+            detail.setAnimator(staff.getAnimator());
+            detail.setActor(staff.getActor());
+            detail.setProducer(staff.getProducer());
+            detail.setWriter(staff.getWriter());
+            detail.setMusician(staff.getMusician());
+            detail.setDirector(staff.getDirector());
+            detail.setCreatedAt(LocalDateTime.now());
+            animations.add(detail);
+          } catch (Exception e) {
+            e.printStackTrace();
+            log.error("解析番剧信息错误，错误标题:{}", subject.toString());
+          }
+        }
+        animationRepository.saveAll(animations);
+        a++;
+      } catch (Exception e) {
+        e.printStackTrace();
+        log.error("解析番剧信息错误，错误标题:{}", item.getTitleCn());
+      }
+      log.info("解析:{}消耗时间：{} ms", item.getTitleCn(), System.currentTimeMillis() - start);
+    }
+    return new UpdateResponse(true, (long) titleListResponses.size(), a, a);
   }
 }

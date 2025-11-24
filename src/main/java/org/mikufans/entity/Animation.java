@@ -1,36 +1,47 @@
 package org.mikufans.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+import org.mikufans.entity.base.Person;
 import org.mikufans.entity.base.Work;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 动画作品表实体类
  * 包含所有动画的完整信息
  */
 @Data
-@Document(collection = "animations")
+@SuperBuilder
+@Document(collection = "animation")
 @Schema(description = "动画作品信息")
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class Animation extends Work {
+
+  /**
+   * 子ID
+   */
+  @Schema(description = "子ID", example = "4232")
+  private String subId;
   /**
    * 总集数
    */
   @Schema(description = "总集数", example = "26")
-  private Integer episodeCount;
+  private String episodeCount;
 
   /**
    * 单集时长（分钟）
    */
   @Schema(description = "单集时长（分钟）", example = "24")
-  private Integer durationPerEpisode;
+  private String duration;
 
   /**
    * 播放平台（如 Bilibili、Crunchyroll）
@@ -39,36 +50,43 @@ public class Animation extends Work {
   private String broadcastPlatform;
 
   /**
-   * 开播日期
-   */
-  @Schema(description = "开播日期", example = "2019-04-06")
-  private LocalDate startDate;
-
-  /**
-   * 完结日期
-   */
-  @Schema(description = "完结日期", example = "2019-09-28")
-  private LocalDate endDate;
-
-  /**
    * 导演
    */
   @Indexed(background = true)
-  @Schema(description = "导演", example = "[\"新海诚\", \"虚渊玄\"]")
-  private List<String> directors;
+  @Schema(description = "导演")
+  private List<Person> director;
 
+  /**
+   * 演员
+   */
+
+  @Indexed(background = true)
+  @Schema(description = "演员")
+  private List<Person> actor;
   /**
    * 编剧
    */
   @Indexed(background = true)
-  @Schema(description = "编剧", example = "[\"虚渊玄\", \"新海诚\"]")
-  private List<String> scriptWriters;
+  @Schema(description = "编剧")
+  private List<Person> writer;
 
   /**
    * 音乐制作
    */
-  @Schema(description = "音乐制作, 多个音乐制作人员之间用逗号分隔", example = "[\"梶浦由记\", \"新海诚\"]")
-  private List<String> musicComposers;
+  @Schema(description = "音乐制作")
+  private List<Person> musician;
+
+  /**
+   * 动画师
+   */
+  @Schema(description = "动画师")
+  private List<Person> animator;
+
+  /**
+   * 制片人
+   */
+  @Schema(description = "制片人")
+  private List<Person> producer;
 
   /**
    * 动画制作公司
@@ -76,16 +94,16 @@ public class Animation extends Work {
   @Schema(description = "动画制作公司", example = "Ufotable")
   private String animationStudio;
 
-  /**
-   * 主要声优列表，存储为 JSON 字符串
-   */
-  @Indexed(background = true)
-  @Schema(description = "主要角色以及对应的声优", example = "{\"空条承太郎\": \"小野大辅\", \"迪奥·布兰度\": \"子安武人\"}")
-  private Map<String, String> mainVoiceActors;
 
   /**
    * 改编来源（如"漫画改编"、"轻小说改编"）
    */
   @Schema(description = "改编来源", example = "漫画改编")
   private String sourceMaterial;
+
+  /**
+   * 所属系列
+   */
+  @Schema(description = "所属系列")
+  private List<Animation> series;
 }

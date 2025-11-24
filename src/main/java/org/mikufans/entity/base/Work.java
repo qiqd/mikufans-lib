@@ -1,7 +1,10 @@
 package org.mikufans.entity.base;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 
@@ -14,6 +17,9 @@ import java.util.List;
  * 封装动画、漫画、游戏等ACG作品的公共属性
  */
 @Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 @Schema(description = "作品基类，封装ACG作品的公共属性")
 public class Work {
   /**
@@ -35,14 +41,14 @@ public class Work {
    */
   @Indexed(background = true)
   @Schema(description = "原名（如日文名）", example = "鬼滅の刃")
-  private String originalTitle;
+  private String titleCn;
 
   /**
    * 英文名称
    */
   @Indexed(background = true)
   @Schema(description = "英文名称", example = "Demon Slayer")
-  private String englishTitle;
+  private String titleEn;
 
   /**
    * 英文名称
@@ -55,7 +61,7 @@ public class Work {
    * 作品简介
    */
   @Schema(description = "作品简介", example = "大正时期，主人公炭治郎的家人被鬼杀害...")
-  private String description;
+  private String summary;
 
   /**
    * 发布日期
@@ -93,18 +99,6 @@ public class Work {
    */
   @Schema(description = "官方网站链接", example = "https://example.com")
   private String officialWebsite;
-
-  /**
-   * 平均评分（0.00~10.00）
-   */
-  @Schema(description = "平均评分", allowableValues = "0.00-10.00", example = "9.5")
-  private Float averageRating;
-
-  /**
-   * 评分人数
-   */
-  @Schema(description = "评分人数", example = "1000000")
-  private Long ratingCount;
 
   /**
    * 总观看/阅读/浏览次数
@@ -165,4 +159,15 @@ public class Work {
    */
   @Schema(description = "单集更新时间", example = "每周三20:00")
   private String singleUpdateTime;
+  /**
+   * 数据来源
+   */
+  @Schema(description = "数据来源", example = "Bilibili")
+  private String dataSource;
+
+  /**
+   * 评分信息
+   */
+  @Schema(description = "评分信息")
+  private RatingInfo ratingInfo;
 }

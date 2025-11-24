@@ -63,8 +63,9 @@ public class CharacterServiceImpl implements CharacterService {
 
   @Override
   public List<Character> getCharactersByType(String type) {
-    return characterRepository.findByType(type);
+    return List.of();
   }
+
 
   @Override
   public List<Character> searchCharactersByName(String name) {

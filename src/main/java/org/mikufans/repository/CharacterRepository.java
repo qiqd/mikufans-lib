@@ -8,8 +8,7 @@ import java.util.List;
 
 @Repository
 public interface CharacterRepository extends MongoRepository<Character, String> {
-  List<Character> findByType(String type);
-  
+
 
   List<Character> findByNameContaining(String name);
 }

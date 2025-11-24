@@ -12,7 +12,7 @@ import java.time.LocalDate;
 public class TitleResponse {
   private String id;
   private String title;
-  private String originalTitle;
-  private String englishTitle;
+  private String titleCn;
+  private String titleEn;
   private LocalDate releaseDate;
 }

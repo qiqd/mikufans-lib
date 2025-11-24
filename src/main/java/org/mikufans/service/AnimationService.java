@@ -4,6 +4,7 @@ import org.mikufans.entity.Animation;
 import org.mikufans.entity.base.MyPage;
 import org.mikufans.entity.request.UpdateFieldById;
 import org.mikufans.entity.response.TitleListResponse;
+import org.mikufans.entity.response.TitleResponse;
 import org.mikufans.entity.response.UpdateResponse;
 import org.springframework.data.domain.Page;
 
@@ -101,7 +102,9 @@ public interface AnimationService {
    * @param size  每页大小
    * @return 动画列表
    */
-  Page<Animation> getAnimationsByYear(LocalDate start, LocalDate end, Integer page, Integer size);
+  Page<Animation> getAnimationOptionally(LocalDate start, LocalDate end, Integer page, Integer size);
 
   Map<String, Integer> updateImageBatch(List<TitleListResponse> titleListResponses);
+
+  UpdateResponse updateByTitles(List<TitleResponse> titleListResponses) throws Exception;
 }
