@@ -194,6 +194,7 @@ public class AnimationServiceImpl implements AnimationService {
         ArrayList<Animation> animations = new ArrayList<>();
         for (Item subject : target) {
           try {
+            Thread.sleep((long) (Math.random() * 3000));
             String s = webScraperService.fetchRenderedHtml("https://movie.douban.com/subject/" + subject.getId() + "/");
             Animation detail = doubanParse.getDetail(s);
             detail.setSubId(subject.getId().toString());

@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Data
 @SuperBuilder
-@Document(collection = "animation")
+@Document(collection = "animations")
 @Schema(description = "动画作品信息")
 @NoArgsConstructor
 @AllArgsConstructor

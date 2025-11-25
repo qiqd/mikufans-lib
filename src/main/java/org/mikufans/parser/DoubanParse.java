@@ -54,6 +54,9 @@ public class DoubanParse {
   }
 
   public List<Item> getId(String html, String title) {
+    if (html.contains("搜索访问太频繁")) {
+      log.error("=========搜索访问太频繁========");
+    }
     Element body = Jsoup.parse(html).body();
     List<Element> data = body.getElementsByTag("script").stream().filter(script -> script.data().contains("window.__DATA__")).toList();
     String script = data.get(0).data();
