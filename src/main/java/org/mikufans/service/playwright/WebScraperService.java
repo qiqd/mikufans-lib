@@ -34,7 +34,7 @@ public class WebScraperService {
 
       // 等待网络空闲（推荐）
 //      page.waitForLoadState(Page.LoadState.NETWORKIDLE);
-      page.waitForTimeout(1000);
+      page.waitForTimeout(Math.random() * 2000);
       String html = page.content();
       log.info("Successfully fetched HTML (length: {})", html.length());
       return html;

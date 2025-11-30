@@ -32,10 +32,7 @@ import org.tetofans.util.HtmlParser;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -179,28 +176,75 @@ public class AnimationServiceImpl implements AnimationService {
   @Override
   public UpdateResponse updateByTitles(List<TitleResponse> titleListResponses) throws Exception {
     String BASE_URL = "https://movie.douban.com";
-    Long a = 0L;
-    for (TitleResponse item : titleListResponses) {
+    Long successCount = 0L;
+
+    // 请求间隔控制配置
+    final long MIN_INTERVAL_MS = 5000; // 最小间隔8秒
+    final long MAX_JITTER_MS = 3000;   // 最大随机抖动3秒
+    long lastRequestTime = 0;
+
+    Random random = new Random();
+
+    for (int i = 0; i < titleListResponses.size(); i++) {
+      TitleResponse item = titleListResponses.get(i);
       long start = System.currentTimeMillis();
+
       try {
-        //index
+        // 确保请求间隔
+        long currentTime = System.currentTimeMillis();
+        long timeSinceLastRequest = currentTime - lastRequestTime;
+        long requiredWait = MIN_INTERVAL_MS - timeSinceLastRequest;
+
+        if (requiredWait > 0 && lastRequestTime > 0) {
+          log.info("等待 {} 毫秒以确保请求间隔", requiredWait);
+          Thread.sleep(requiredWait);
+        }
+
+        // 执行搜索请求
         String searchUrl = "https://search.douban.com/movie/subject_search?search_text=";
         String html = webScraperService.fetchRenderedHtml(searchUrl + item.getTitleCn());
         List<Item> idItem = doubanParse.getId(html, item.getTitleCn());
-        List<Animation> record = animationRepository.findBySubIdIn(idItem.stream().map(i -> i.getId().toString()).toList());
-        Map<String, Animation> animationMap = record.stream().collect(Collectors.toMap(Animation::getSubId, v -> v));
-        List<Item> target = idItem.stream().filter(i -> !animationMap.containsKey(i.getId().toString())).toList();
-        Thread.sleep((long) (Math.random() * 3000));
+
+        // 检查数据库中是否已存在
+        List<Animation> record = animationRepository.findBySubIdIn(
+                idItem.stream().map(f -> f.getId().toString()).toList()
+        );
+        Map<String, Animation> animationMap = record.stream()
+                .collect(Collectors.toMap(Animation::getSubId, v -> v));
+        List<Item> target = idItem.stream()
+                .filter(f -> !animationMap.containsKey(f.getId().toString()))
+                .toList();
+
+        // 记录当前请求时间
+        lastRequestTime = System.currentTimeMillis();
+
+        // 处理每个目标项
         ArrayList<Animation> animations = new ArrayList<>();
-        for (Item subject : target) {
+        for (int j = 0; j < target.size(); j++) {
+          Item subject = target.get(j);
+
+          // 每个详情页也添加间隔
+          if (j > 0) {
+            long detailInterval = MIN_INTERVAL_MS / 2 + random.nextInt(2000); // 4-6秒间隔
+            Thread.sleep(detailInterval);
+          }
+
           try {
-            Thread.sleep((long) (Math.random() * 3000));
-            String s = webScraperService.fetchRenderedHtml("https://movie.douban.com/subject/" + subject.getId() + "/");
-            Animation detail = doubanParse.getDetail(s);
+            // 获取详情页
+            String detailHtml = webScraperService.fetchRenderedHtml(
+                    "https://movie.douban.com/subject/" + subject.getId() + "/"
+            );
+            Animation detail = doubanParse.getDetail(detailHtml);
             detail.setSubId(subject.getId().toString());
-            Thread.sleep((long) (Math.random() * 3000));
-            String s1 = webScraperService.fetchRenderedHtml("https://movie.douban.com/subject/" + subject.getId() + "/celebrities");
-            Animation staff = doubanParse.getStaff(s1);
+
+            // 获取职员表
+            Thread.sleep(2000 + random.nextInt(2000)); // 2-4秒间隔
+            String staffHtml = webScraperService.fetchRenderedHtml(
+                    "https://movie.douban.com/subject/" + subject.getId() + "/celebrities"
+            );
+            Animation staff = doubanParse.getStaff(staffHtml);
+
+            // 合并数据
             detail.setAnimator(staff.getAnimator());
             detail.setActor(staff.getActor());
             detail.setProducer(staff.getProducer());
@@ -208,20 +252,39 @@ public class AnimationServiceImpl implements AnimationService {
             detail.setMusician(staff.getMusician());
             detail.setDirector(staff.getDirector());
             detail.setCreatedAt(LocalDateTime.now());
+
             animations.add(detail);
+            successCount++;
+
           } catch (Exception e) {
-            e.printStackTrace();
-            log.error("解析番剧信息错误，错误标题:{}", subject.toString());
+            log.error("解析番剧详情失败，标题: {}, ID: {}", subject.getTitle(), subject.getId(), e);
+            // 出错时增加额外等待时间
+            Thread.sleep(5000 + random.nextInt(3000));
           }
         }
-        animationRepository.saveAll(animations);
-        a++;
+
+        // 批量保存
+        if (!animations.isEmpty()) {
+          animationRepository.saveAll(animations);
+        }
+
+        // 批次间间隔（最后一个不等待）
+        if (i < titleListResponses.size() - 1) {
+          long batchInterval = MIN_INTERVAL_MS + random.nextLong(MAX_JITTER_MS) + random.nextLong(MAX_JITTER_MS, 2 * MAX_JITTER_MS);
+          log.info("批次 {} 完成，等待 {} 毫秒后继续", i + 1, batchInterval);
+          Thread.sleep(batchInterval);
+        }
+
       } catch (Exception e) {
-        e.printStackTrace();
-        log.error("解析番剧信息错误，错误标题:{}", item.getTitleCn());
+        log.error("处理番剧失败，标题: {}", item.getTitleCn(), e);
+        // 出错时增加等待时间
+        Thread.sleep(3000 + random.nextInt(4000));
       }
-      log.info("解析:{}消耗时间：{} ms", item.getTitleCn(), System.currentTimeMillis() - start);
+
+      log.info("解析:{} 完成，消耗时间：{} ms", item.getTitleCn(), System.currentTimeMillis() - start);
     }
-    return new UpdateResponse(true, (long) titleListResponses.size(), a, a);
+
+    return new UpdateResponse(true, (long) titleListResponses.size(), successCount, successCount);
   }
+
 }

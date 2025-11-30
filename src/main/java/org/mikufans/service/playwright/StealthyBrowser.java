@@ -26,6 +26,27 @@ public class StealthyBrowser {
           "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.6613.138 Safari/537.36",
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.6478.127 Safari/537.36"
   );
+  // 常用时区列表
+  private static final List<String> TIMEZONES = Arrays.asList(
+          "America/New_York",
+          "America/Los_Angeles",
+          "America/Chicago",
+          "Europe/London",
+          "Europe/Paris",
+          "Asia/Tokyo",
+          "Asia/Shanghai",
+          "Australia/Sydney"
+  );
+  // 语言区域设置
+  private static final List<String> LOCALES = Arrays.asList(
+          "en-US",
+          "en-GB",
+          "zh-CN",
+          "ja-JP",
+          "fr-FR",
+          "de-DE",
+          "es-ES"
+  );
 
   private static final Random random = new Random();
 
@@ -49,13 +70,16 @@ public class StealthyBrowser {
     );
 
     BrowserContext context = browser.newContext(new Browser.NewContextOptions()
-            .setViewportSize(1920, 1080)
             .setUserAgent(userAgent)
-            .setLocale("en-US")
-            .setTimezoneId("America/New_York") // 可根据目标站点调整
+            .setLocale(LOCALES.get(random.nextInt(LOCALES.size())))
+            .setTimezoneId(TIMEZONES.get(random.nextInt(TIMEZONES.size())))
     );
 
     Page page = context.newPage();
+// 替换固定的viewport设置
+    int width = 1280 + random.nextInt(640);  // 1280-1920之间
+    int height = 800 + random.nextInt(400);  // 800-1200之间
+    page.setViewportSize(width, height);
 
     // 关键：隐藏 webdriver 属性
     page.addInitScript("Object.defineProperty(navigator, 'webdriver', { get: () => undefined });");
@@ -66,6 +90,38 @@ public class StealthyBrowser {
             Object.defineProperty(navigator, 'permissions', {
               get: () => ({ query: Promise.resolve.bind(Promise) })
             });
+            """);
+// 在createStealthPage方法中添加更多初始化脚本
+    page.addInitScript("""
+                // 伪装WebGL渲染器
+                const getParameter = WebGLRenderingContext.prototype.getParameter;
+                WebGLRenderingContext.prototype.getParameter = function(parameter) {
+                    if (parameter === 37445) return 'Intel Inc.';
+                    if (parameter === 37446) return 'Intel Iris OpenGL Engine';
+                    return getParameter.apply(this, arguments);
+                };
+            
+                // 伪装canvas
+                HTMLCanvasElement.prototype.toDataURL = function() {
+                    return '';
+                };
+            
+                // 伪装plugins和mimeTypes
+                navigator.__defineGetter__('plugins', function() {
+                    return {
+                        length: 0,
+                        item: function() { return null; },
+                        namedItem: function() { return null; }
+                    };
+                });
+            
+                navigator.__defineGetter__('mimeTypes', function() {
+                    return {
+                        length: 0,
+                        item: function() { return null; },
+                        namedItem: function() { return null; }
+                    };
+                });
             """);
 
     return page;
