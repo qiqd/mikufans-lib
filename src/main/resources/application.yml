@@ -11,6 +11,9 @@ spring:
   jackson:
     time-zone: GMT+8
 logging:
+  charset:
+    console: UTF-8
+    file: UTF-8
   level:
     root: info
     org.mikufans: debug
@@ -18,7 +21,7 @@ logging:
   file:
     name: ./log/mikufans-librarians-lib.log
   logback:
-    rolling policy:
+    rolling-policy:
       max-file-size: 5MB
 server:
   port: 45279

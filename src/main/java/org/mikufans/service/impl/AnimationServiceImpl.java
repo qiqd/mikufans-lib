@@ -184,6 +184,7 @@ public class AnimationServiceImpl implements AnimationService {
     long lastRequestTime = 0;
 
     Random random = new Random();
+//    random.setSeed();
 
     for (int i = 0; i < titleListResponses.size(); i++) {
       TitleResponse item = titleListResponses.get(i);
@@ -270,7 +271,7 @@ public class AnimationServiceImpl implements AnimationService {
 
         // 批次间间隔（最后一个不等待）
         if (i < titleListResponses.size() - 1) {
-          long batchInterval = MIN_INTERVAL_MS + random.nextLong(MAX_JITTER_MS) + random.nextLong(MAX_JITTER_MS, 2 * MAX_JITTER_MS);
+          long batchInterval = (long) (Math.random() * MIN_INTERVAL_MS) + random.nextLong(1000L, MAX_JITTER_MS) + random.nextLong(MAX_JITTER_MS, 2 * MAX_JITTER_MS);
           log.info("批次 {} 完成，等待 {} 毫秒后继续", i + 1, batchInterval);
           Thread.sleep(batchInterval);
         }
